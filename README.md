@@ -10,6 +10,9 @@ din hämtbegäran vilken titel du vill, t.ex. "Labb-inlämning".
 
 Beskrivningen av din hämtbegäran ska innehålla följande:
 
+* `Fixes #1` för att ange att denna inläming "fixar" issue #1 som vi
+  öppnat åt dig.
+
 * `Report: <path>`
 
   där `<path>` är sökvägen till din rapport (t.ex. `rapport.pdf`
