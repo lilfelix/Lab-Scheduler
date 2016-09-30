@@ -1,0 +1,8 @@
+% I detta exempel finns ingen lösning.
+
+teachers = 4;
+timeslots = 1;
+
+solutions = 4;
+solution_lab = [1, 1, 2, 2];
+solution_group = [{1,2}, {3,4}, {1,5}, {6,7}];

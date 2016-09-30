@@ -1,0 +1,6 @@
+teachers = 2;
+timeslots = 3;
+
+solutions = 5;
+solution_lab = [1, 1, 2, 2, 2];
+solution_group = [{1,2}, {3,4}, {5,6}, {1,2,3}, {7,8}];
