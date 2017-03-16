@@ -1,7 +1,16 @@
 % DD1361 Programmeringsparadigm, Labb L3: Redovisningsschemaläggning
 % Kod-skelett av Per Austrin
 %
-% Lösning av...
+% Lösning av Felix Liljefors
+%
+%teachers = 2;
+%timeslots = 2;
+
+%solutions = 4;
+%solution_lab = [1, 1, 2, 2];
+%solution_group = [{1,2}, {3,4}, {1,3}, {2,4}];
+%
+%
 
 include "globals.mzn";
 
@@ -46,10 +55,10 @@ set of int: Timeslots = 1..timeslots;
 
 % Hur många studenter som vill redovisa varje labb
 array [Labs] of int: student_lab_count = 
-   [sum (sol in Solutions where solution_lab[sol] = l) (card(solution_group[sol])) | l in Labs];
+   [sum (sol in Solutions where solution_lab[sol] = l) (card(solution_group[sol])) | l in Labs]; %aggregate sum of: for every lab solution = l, take cardinality of student set to that specific lab solution
 
 % Hur många redovisningar det borde bli per labb
-array [Labs] of int: presentations_per_lab = [student_lab_count[l] div 2 | l in Labs];
+array [Labs] of int: presentations_per_lab = [student_lab_count[l] div 2 | l in Labs]; % 3 div 2 ger 1?
 
 % Hur många redovisningar det borde bli totalt
 int: presentations = sum(presentations_per_lab);
@@ -92,7 +101,24 @@ array [Presentations] of var Timeslots: presentation_time;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % VILLKOR FÖR ATT LÖSA PROBLEMET HÄR
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Varje student ska få redovisa exakt de labbar hen löst, och inte behöva redovisa någon labb mer än en gång.
+%for all students in Students, if 
+constraint forall (s in Solutions) 
+ 
+% Redovisningsgrupperna ska bestå av grupper om 2 studenter (i undantagsfall en grupp per labb med 3 studenter, om det är ett udda antal studenter som gjort den labben).
+constraint forall (pg in presentation_group) ( card(pg) == 2 \/ card(pg) == 3);
 
+% Varje student ska redovisa varje labb tillsammans med en annan student (eller två andra, i undantagsfallet med en redovisningsgrupp av storlek 3) än den/de studenter som hen gjort labben tillsammans med.
+%for every presentation group, for every lab group if x is in persentation group and lab group, and y is in lab group, then y is not in presentation group
+constraint
+    forall (pg in presentation_group) (
+        forall (sg in solution_group ) (
+            (s1 in sg /\ s2 in sg) -> not(s1 in pg /\ s2 in pg)
+        )
+    ); 
+        
+% En labbhandledare kan inte vara inbokad på två olika redovisningar vid samma tidpunkt.
+% En student kan inte vara inbokad på två olika redovisningar vid samma tidpunkt.
 % ...
 
 
