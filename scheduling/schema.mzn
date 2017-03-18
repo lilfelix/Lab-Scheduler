@@ -101,23 +101,14 @@ array [Presentations] of var Timeslots: presentation_time;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % VILLKOR FÖR ATT LÖSA PROBLEMET HÄR
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Varje student ska få redovisa exakt de labbar hen löst, och inte behöva redovisa någon labb mer än en gång.
-%for all students in Students, if 
-%för varje lab, ta fram alla redovisningsgrupper, kolla att de alla är distinkta
-%[ s | p in Presentations, s in set2array(presentation_group[p]) where presentation_lab[p] = l];
-constraint
-    forall (l in Labs) ( 
-            let { 
-                int: n = student_lab_count[l], %antal studenter som vill redovisa denna labb
-                array[n] of var int: members = [show(s) | p in Presentations, g in presentation_group[p], s in g where presentation_lab[p] = l]
-            } in 
-              alldifferent(members) /\ array_union(members) == n
-    );
+% Varje student ska få redovisa exakt de labbar hen löst
+%constraint forall (group in solution_group, student in group, p) ();
 
-%(p in Presentations where presentation_lab[p] = l) (s in set2array(presentation_group[p]))
+% Varje student ska inte behöva redovisa någon labb mer än en gång.
+constraint forall (p1,p2 in Presentations where p1 != p2 /\ presentation_lab[p1] == presentation_lab[p2]) ((presentation_group[p1] intersect presentation_group[p2]) == {});
  
 % Redovisningsgrupperna ska bestå av grupper om 2 studenter (i undantagsfall en grupp per labb med 3 studenter, om det är ett udda antal studenter som gjort den labben).
-constraint forall (pg in presentation_group) ( card(pg) == 2 \/ card(pg) == 3);
+constraint forall (pg in presentation_group) ( card(pg) >= 1 /\ card(pg) <= 3);
 
 % Varje student ska redovisa varje labb tillsammans med en annan student (eller två andra, i undantagsfallet med en redovisningsgrupp av storlek 3) än den/de studenter som hen gjort labben tillsammans med.
 %for every presentation group, for every lab group if x is in persentation group and lab group, and y is in lab group, then y is not in presentation group
