@@ -102,7 +102,6 @@ array [Presentations] of var Timeslots: presentation_time;
 % VILLKOR FÖR ATT LÖSA PROBLEMET HÄR
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Varje student ska få redovisa exakt de labbar hen löst
-%constraint forall (group in solution_group, student in group, p) ();
 
 % Varje student ska inte behöva redovisa någon labb mer än en gång.
 constraint forall (p1,p2 in Presentations where p1 != p2 /\ presentation_lab[p1] == presentation_lab[p2]) ((presentation_group[p1] intersect presentation_group[p2]) == {});
@@ -111,16 +110,18 @@ constraint forall (p1,p2 in Presentations where p1 != p2 /\ presentation_lab[p1]
 constraint forall (pg in presentation_group) ( card(pg) >= 1 /\ card(pg) <= 3);
 
 % Varje student ska redovisa varje labb tillsammans med en annan student (eller två andra, i undantagsfallet med en redovisningsgrupp av storlek 3) än den/de studenter som hen gjort labben tillsammans med.
-%for every presentation group, for every lab group if x is in persentation group and lab group, and y is in lab group, then y is not in presentation group
 constraint
     forall (pg in presentation_group) (
         forall (sg in solution_group ) (
-            %forall (s1, s2 in sg where s1 != s2) -> not(s1 in pg /\ s2 in pg)
-            forall( [ not(s1 in pg /\ s2 in pg) | s1,s2 in sg where s1 != s2])
+            forall (s1, s2 in sg where s1 != s2) (not(s1 in pg /\ s2 in pg))
         )
     ); 
         
 % En labbhandledare kan inte vara inbokad på två olika redovisningar vid samma tidpunkt.
+constraint 
+    forall (p1,p2 in Presentations where p1 != p2 /\ presentation_time[p1] == presentation_time[p2]) (
+        forall (t in presentation_teacher) (not(presentation_teacher[p1] == t /\ presentation_teacher[p2] == t))
+    );
 % En student kan inte vara inbokad på två olika redovisningar vid samma tidpunkt.
 % ...
 
