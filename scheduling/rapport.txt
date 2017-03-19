@@ -1,0 +1,149 @@
+Rapport Labb L3 DD1361
+Författad av Felix Liljefors
+
+Resultat:
+
+Easy 1:
+4 redovisningar:
+    Tid  Handl.  Labb  Studenter
+ 1: 2    2       1     {2,4}
+ 2: 2    1       1     {1,3}
+ 3: 1    2       2     {3,4}
+ 4: 1    1       2     {1,2}
+----------
+%% runtime:       0.003 (3.149 ms)
+%% solvetime:     0.000 (0.442 ms)
+%% solutions:     1
+%% variables:     232
+%% propagators:   248
+%% propagations:  1382
+%% nodes:         24
+%% failures:      7
+%% restarts:      0
+%% peak depth:    9
+Finished in 56msec
+
+Easy 2:
+4 redovisningar:
+    Tid  Handl.  Labb  Studenter
+ 1: 2    2       1     {2,4}
+ 2: 2    1       1     {1,3}
+ 3: 1    2       2     {2,4}
+ 4: 1    1       2     {1,3}
+----------
+%%  runtime:       0.017 (17.673 ms)
+%%  solvetime:     0.003 (3.482 ms)
+%%  solutions:     1
+%%  variables:     232
+%%  propagators:   248
+%%  propagations:  1382
+%%  nodes:         24
+%%  failures:      7
+%%  restarts:      0
+%%  peak depth:    9
+Finished in 71msec
+
+Easy 3:
+=====UNSATISFIABLE=====
+%%  runtime:       43.532 (43532.947 ms)
+%%  solvetime:     43.530 (43530.343 ms)
+%%  solutions:     0
+%%  variables:     243
+%%  propagators:   261
+%%  propagations:  378228528
+%%  nodes:         5762697
+%%  failures:      2881349
+%%  restarts:      0
+%%  peak depth:    21
+Finished in 43s 566msec
+
+Easy 4:
+=====UNSATISFIABLE=====
+%%  runtime:       0.001 (1.655 ms)
+%%  solvetime:     0.000 (0.361 ms)
+%%  solutions:     0
+%%  variables:     124
+%%  propagators:   68
+%%  propagations:  1257
+%%  nodes:         95
+%%  failures:      48
+%%  restarts:      0
+%%  peak depth:    5
+
+Easy 5:
+4 redovisningar:
+    Tid  Handl.  Labb  Studenter
+ 1: 2    2       1     {2,4}
+ 2: 2    1       1     {1,3}
+ 3: 1    2       2     {5,7}
+ 4: 1    1       2     {1,6}
+----------
+%%  runtime:       0.003 (3.005 ms)
+%%  solvetime:     0.000 (0.478 ms)
+%%  solutions:     1
+%%  variables:     232
+%%  propagators:   236
+%%  propagations:  1372
+%%  nodes:         24
+%%  failures:      7
+%%  restarts:      0
+%%  peak depth:    9
+Finished in 43msec
+
+Medium 1:
+5 redovisningar:
+    Tid  Handl.  Labb  Studenter
+ 1: 2    2       1     {2,4}
+ 2: 1    2       1     {1,3}
+ 3: 3    1       2     {1,8}
+ 4: 2    1       2     {3,6}
+ 5: 1    1       2     {2,5,7}
+----------
+%%  runtime:       0.008 (8.914 ms)
+%%  solvetime:     0.004 (4.147 ms)
+%%  solutions:     1
+%%  variables:     416
+%%  propagators:   440
+%%  propagations:  22792
+%%  nodes:         396
+%%  failures:      191
+%%  restarts:      0
+%%  peak depth:    17
+Finished in 96msec
+
+Medium 2:
+7 redovisningar:
+    Tid  Handl.  Labb  Studenter
+ 1: 3    1       1     {13,15}
+ 2: 2    1       1     {12,14}
+ 3: 1    5       1     10..11
+ 4: 1    2       1     8..9
+ 5: 1    1       1     6..7
+ 6: 1    4       1     {2,5}
+ 7: 1    3       1     {1,3,4}
+----------
+%%  runtime:       0.023 (23.657 ms)
+%%  solvetime:     0.009 (9.897 ms)
+%%  solutions:     1
+%%  variables:     1274
+%%  propagators:   1353
+%%  propagations:  15744
+%%  nodes:         562
+%%  failures:      267
+%%  restarts:      0
+%%  peak depth:    30
+Finished in 58msec
+
+Medium 3: Ingen lösning
+
+Hard 1: Ingen lösning
+
+## Reflektion:
+Villkorsprogrammering har varit intressand att bekanta sig med pga dess deklarativa egenskaper.
+Det är tydligt efter att ha labbat lite med Minizinc detta programmeringsparadigm är bättre lämpat för
+optimeringsproblem än många andra. Det blir också tydligt hur viktigt det är att villkoren man anger
+effektivt begränsar "värdemängden" man vill att resultaten ska kunna anta, för att undvika sega program.
+Syntaxen för just Minizinc tycker jag är intuitiv, och det var roligt
+få tillämpa det man lärt sig i logikkursen under hösten i programmeringskontext.
+Till exempel var det kul att använda set comprehenshions och kvantifikatorer.
+MinizincIDE tyckte jag dock var ganska buggigt. Det kraschade ibland utan att en modell kördes exempelvis.

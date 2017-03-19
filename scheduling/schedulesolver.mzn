@@ -105,14 +105,17 @@ constraint
 constraint forall (p1,p2 in Presentations where p1 != p2 /\ presentation_lab[p1] == presentation_lab[p2]) ((presentation_group[p1] intersect presentation_group[p2]) == {});
  
 % Redovisningsgrupperna ska bestå av grupper om 2 studenter (i undantagsfall en grupp per labb med 3 studenter, om det är ett udda antal studenter som gjort den labben).
+
 constraint
-    forall (lab in Labs) ( 
-        if student_lab_count[lab] mod 2 == 1 
-        then exists (p3 in Presentations where presentation_lab[p3] == lab)
-             (card(presentation_group[p3]) == 3 /\ forall (p2 in (Presentations diff {p3}) where presentation_lab[p2] == lab) (card(presentation_group[p2]) == 2))
-        else forall (p in Presentations where presentation_lab[p] == lab) (card(presentation_group[p]) == 2)
+    forall (l in Labs) (
+        if student_lab_count[l] mod 2 == 0
+        then forall (p in Presentations where presentation_lab[p] == l) (card(presentation_group[p]) == 2)
+        else exists (p in Presentations where presentation_lab[p] == l) (card(presentation_group[p]) == 3 /\
+             forall (p2 in (Presentations diff {p}) where presentation_lab[p2] == l) (card(presentation_group[p2]) == 2))
         endif
-    );
+    );  
+    
+        
     
 % Varje student ska redovisa varje labb tillsammans med en annan student (eller två andra, i undantagsfallet med en redovisningsgrupp av storlek 3) än den/de studenter som hen gjort labben tillsammans med.
 constraint forall (pres in Presentations, sol in Solutions where solution_lab[sol] == presentation_lab[pres]) (card(presentation_group[pres] intersect solution_group[sol]) <= 1);
