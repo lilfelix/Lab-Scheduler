@@ -1,16 +1,6 @@
 % DD1361 Programmeringsparadigm, Labb L3: Redovisningsschemaläggning
 % Kod-skelett av Per Austrin
-%
 % Lösning av Felix Liljefors
-%
-%teachers = 2;
-%timeslots = 2;
-
-%solutions = 4;
-%solution_lab = [1, 1, 2, 2];
-%solution_group = [{1,2}, {3,4}, {1,3}, {2,4}];
-%
-%
 
 include "globals.mzn";
 
@@ -58,7 +48,7 @@ array [Labs] of int: student_lab_count =
    [sum (sol in Solutions where solution_lab[sol] = l) (card(solution_group[sol])) | l in Labs]; %aggregate sum of: for every lab solution = l, take cardinality of student set to that specific lab solution
 
 % Hur många redovisningar det borde bli per labb
-array [Labs] of int: presentations_per_lab = [student_lab_count[l] div 2 | l in Labs]; % 3 div 2 ger 1?
+array [Labs] of int: presentations_per_lab = [student_lab_count[l] div 2 | l in Labs]; % 3 div 2 ger 1
 
 % Hur många redovisningar det borde bli totalt
 int: presentations = sum(presentations_per_lab);
@@ -81,7 +71,6 @@ function array[int] of Labs: compute_presentations(set of Labs: labs) =
 
 % För varje redovisningsgrupp, vilken labb som ska redovisas. Ex [1,1,1,2,2] de tre första grupperna presenterar lab 1
 array [Presentations] of Labs: presentation_lab = compute_presentations(Labs);
-
 
 
 %%%%%%%%%%%%%%%%%%%%
@@ -116,18 +105,17 @@ constraint
 constraint forall (p1,p2 in Presentations where p1 != p2 /\ presentation_lab[p1] == presentation_lab[p2]) ((presentation_group[p1] intersect presentation_group[p2]) == {});
  
 % Redovisningsgrupperna ska bestå av grupper om 2 studenter (i undantagsfall en grupp per labb med 3 studenter, om det är ett udda antal studenter som gjort den labben).
-%constraint forall (pg in presentation_group) ( card(pg) == 2 \/ card(pg) == 3);
 constraint
     forall (lab in Labs) ( 
         if student_lab_count[lab] mod 2 == 1 
-        then exists (p3 in Presentations where presentation_lab[p3] == lab) (card(presentation_group[p3]) == 3 /\ forall (p2 in (Presentations diff {p3}) where presentation_lab[p2] == lab) (card(presentation_group[p2]) == 2))
+        then exists (p3 in Presentations where presentation_lab[p3] == lab)
+             (card(presentation_group[p3]) == 3 /\ forall (p2 in (Presentations diff {p3}) where presentation_lab[p2] == lab) (card(presentation_group[p2]) == 2))
         else forall (p in Presentations where presentation_lab[p] == lab) (card(presentation_group[p]) == 2)
         endif
     );
     
 % Varje student ska redovisa varje labb tillsammans med en annan student (eller två andra, i undantagsfallet med en redovisningsgrupp av storlek 3) än den/de studenter som hen gjort labben tillsammans med.
 constraint forall (pres in Presentations, sol in Solutions where solution_lab[sol] == presentation_lab[pres]) (card(presentation_group[pres] intersect solution_group[sol]) <= 1);
-
     
 % En labbhandledare kan inte vara inbokad på två olika redovisningar vid samma tidpunkt.
 constraint 
