@@ -101,13 +101,41 @@ array [Presentations] of var Timeslots: presentation_time;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % VILLKOR FÖR ATT LÖSA PROBLEMET HÄR
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%constraint forall (x in Solutions, z in Presentations) ((s1 in solution_group[x] /\ solution_lab[x] = y) -> (s1 in presentation_group[z] /\ presentation_lab[z] == y));
+
+%constraint forall (x in Solutions, z in Presentations) ((s1 in solution_group[x] /\ solution_lab[x] == presentation_lab[z]) -> (s1 in presentation_group[z]));
+
+%constraint forall (x in Solutions, z in Presentations, s1 in Students) ((s1 in solution_group[x] /\ solution_lab[x] == presentation_lab[z]) -> (exists (s2 in presentation_group[z]) (s1 == s2)));
+
+%exists (sol in Solution, pres in Presentations where s in solution_group[sol] /\ solution_lab[sol] == presentation_lab[pres] /\ s in presentation_group[pres]) (s in solution_group[sol)
+
+
+%constraint
+%    forall (s in Students) (
+%        exists (sol in Solutions, pres in Presentations where solution_lab[sol] == presentation_lab[pres]) (s in solution_group[sol] /\ s in presentation_group[pres])
+%    );
+
+constraint
+    forall (s in Students) (
+        exists (sol in Solutions, pres in Presentations where solution_lab[sol] == presentation_lab[pres]) (s in solution_group[sol] <-> s in presentation_group[pres])
+    );
+
+
 % Varje student ska få redovisa exakt de labbar hen löst
+%if solution group X has done lab Y, then all members of X are make up a subset of all members of the union of all presentation groups for lab Y
+%constraint
+%    forall (sol in Solutions) (
+%        forall (p in Presentations where presentation_lab[p] == solution_lab[sol]) (
+%            forall (student in solution_group[sol]) (exists (pres_group in presentation_group[p]) (student in pres_group))
+%        )  
+%    );
 
 % Varje student ska inte behöva redovisa någon labb mer än en gång.
 constraint forall (p1,p2 in Presentations where p1 != p2 /\ presentation_lab[p1] == presentation_lab[p2]) ((presentation_group[p1] intersect presentation_group[p2]) == {});
  
 % Redovisningsgrupperna ska bestå av grupper om 2 studenter (i undantagsfall en grupp per labb med 3 studenter, om det är ett udda antal studenter som gjort den labben).
-constraint forall (pg in presentation_group) ( card(pg) >= 1 /\ card(pg) <= 3);
+constraint forall (pg in presentation_group) ( card(pg) == 2 \/ card(pg) == 3);
 
 % Varje student ska redovisa varje labb tillsammans med en annan student (eller två andra, i undantagsfallet med en redovisningsgrupp av storlek 3) än den/de studenter som hen gjort labben tillsammans med.
 constraint
@@ -123,7 +151,10 @@ constraint
         forall (t in presentation_teacher) (not(presentation_teacher[p1] == t /\ presentation_teacher[p2] == t))
     );
 % En student kan inte vara inbokad på två olika redovisningar vid samma tidpunkt.
-% ...
+constraint 
+    forall (p1,p2 in Presentations where p1 != p2 /\ presentation_time[p1] == presentation_time[p2]) (
+        forall (s in Students) (not(s in presentation_group[p1] /\ s in presentation_group[p2]))
+    );
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
