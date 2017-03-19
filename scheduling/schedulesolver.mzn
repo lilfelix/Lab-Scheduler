@@ -107,6 +107,11 @@ constraint
         member(presentation_group[pres],s) -> exists (sol in Solutions where solution_lab[sol] == presentation_lab[pres]) (member(solution_group[sol],s))
     );
 
+constraint
+    forall (sol in Solutions, s in Students) (
+        member(solution_group[sol],s) -> exists (pres in Presentations where solution_lab[sol] == presentation_lab[pres]) (member(presentation_group[pres],s))
+    );
+
 % Varje student ska inte behöva redovisa någon labb mer än en gång.
 constraint forall (p1,p2 in Presentations where p1 != p2 /\ presentation_lab[p1] == presentation_lab[p2]) ((presentation_group[p1] intersect presentation_group[p2]) == {});
  
