@@ -103,13 +103,8 @@ array [Presentations] of var Timeslots: presentation_time;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Varje student ska få redovisa exakt de labbar hen löst
 constraint
-    forall (s in Students, sol in Solutions where member(solution_group[sol],s)) (
-        exists (p in Presentations where solution_lab[sol] == presentation_lab[p]) (member(solution_group[sol],s) <-> member(presentation_group[p],s))
-    );
-
-constraint
-    forall (s in Students, sol in Solutions where not(member(solution_group[sol],s))) (
-        exists (p in Presentations where solution_lab[sol] == presentation_lab[p]) (member(solution_group[sol],s) <-> not(member(presentation_group[p],s)))
+    forall (pres in Presentations, s in Students) (
+        member(presentation_group[pres],s) -> exists (sol in Solutions where solution_lab[sol] == presentation_lab[pres]) (member(solution_group[sol],s))
     );
 
 % Varje student ska inte behöva redovisa någon labb mer än en gång.
