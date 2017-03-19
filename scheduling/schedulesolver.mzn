@@ -101,35 +101,16 @@ array [Presentations] of var Timeslots: presentation_time;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % VILLKOR FÖR ATT LÖSA PROBLEMET HÄR
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%constraint forall (x in Solutions, z in Presentations) ((s1 in solution_group[x] /\ solution_lab[x] = y) -> (s1 in presentation_group[z] /\ presentation_lab[z] == y));
-
-%constraint forall (x in Solutions, z in Presentations) ((s1 in solution_group[x] /\ solution_lab[x] == presentation_lab[z]) -> (s1 in presentation_group[z]));
-
-%constraint forall (x in Solutions, z in Presentations, s1 in Students) ((s1 in solution_group[x] /\ solution_lab[x] == presentation_lab[z]) -> (exists (s2 in presentation_group[z]) (s1 == s2)));
-
-%exists (sol in Solution, pres in Presentations where s in solution_group[sol] /\ solution_lab[sol] == presentation_lab[pres] /\ s in presentation_group[pres]) (s in solution_group[sol)
-
-
-%constraint
-%    forall (s in Students) (
-%        exists (sol in Solutions, pres in Presentations where solution_lab[sol] == presentation_lab[pres]) (s in solution_group[sol] /\ s in presentation_group[pres])
-%    );
-
+% Varje student ska få redovisa exakt de labbar hen löst
 constraint
-    forall (s in Students) (
-        exists (sol in Solutions, pres in Presentations where solution_lab[sol] == presentation_lab[pres]) (s in solution_group[sol] <-> s in presentation_group[pres])
+    forall (s in Students, sol in Solutions where member(solution_group[sol],s)) (
+        exists (p in Presentations where solution_lab[sol] == presentation_lab[p]) (member(solution_group[sol],s) <-> member(presentation_group[p],s))
     );
 
-
-% Varje student ska få redovisa exakt de labbar hen löst
-%if solution group X has done lab Y, then all members of X are make up a subset of all members of the union of all presentation groups for lab Y
-%constraint
-%    forall (sol in Solutions) (
-%        forall (p in Presentations where presentation_lab[p] == solution_lab[sol]) (
-%            forall (student in solution_group[sol]) (exists (pres_group in presentation_group[p]) (student in pres_group))
-%        )  
-%    );
+constraint
+    forall (s in Students, sol in Solutions where not(member(solution_group[sol],s))) (
+        exists (p in Presentations where solution_lab[sol] == presentation_lab[p]) (member(solution_group[sol],s) <-> not(member(presentation_group[p],s)))
+    );
 
 % Varje student ska inte behöva redovisa någon labb mer än en gång.
 constraint forall (p1,p2 in Presentations where p1 != p2 /\ presentation_lab[p1] == presentation_lab[p2]) ((presentation_group[p1] intersect presentation_group[p2]) == {});
