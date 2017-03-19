@@ -125,18 +125,15 @@ constraint
     );
 
 % Varje student ska redovisa varje labb tillsammans med en annan student (eller två andra, i undantagsfallet med en redovisningsgrupp av storlek 3) än den/de studenter som hen gjort labben tillsammans med.
-constraint
-    forall (pg in presentation_group) (
-        forall (sg in solution_group ) (
-            forall (s1, s2 in sg where s1 != s2) (not(s1 in pg /\ s2 in pg))
-        )
-    ); 
-        
+constraint forall (pres in Presentations, sol in Solutions where solution_lab[sol] == presentation_lab[pres]) (card(presentation_group[pres] intersect solution_group[sol]) <= 1);
+
+    
 % En labbhandledare kan inte vara inbokad på två olika redovisningar vid samma tidpunkt.
 constraint 
     forall (p1,p2 in Presentations where p1 != p2 /\ presentation_time[p1] == presentation_time[p2]) (
         forall (t in presentation_teacher) (not(presentation_teacher[p1] == t /\ presentation_teacher[p2] == t))
     );
+    
 % En student kan inte vara inbokad på två olika redovisningar vid samma tidpunkt.
 constraint 
     forall (p1,p2 in Presentations where p1 != p2 /\ presentation_time[p1] == presentation_time[p2]) (
